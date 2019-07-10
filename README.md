@@ -1,9 +1,12 @@
+# My Links
+
 Urls customization service made for educational purposes with node.js and express.
 
-Setup:
+###### Setup:
 make setup
+
 make install
 
-Then to run:
+###### Then to run:
 make dev
 
