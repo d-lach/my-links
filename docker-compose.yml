@@ -1,0 +1,18 @@
+version: '3'
+services:
+  core:
+    image: node:${NODE_VERSION}
+    container_name: ${APP_NAME}_node
+    volumes:
+      - nodemodules:/usr/src/service/node_modules
+      - ${APP_PATH}:/usr/src/service
+    working_dir: /usr/src/service
+    tty: true
+    command: npm run dev
+    ports:
+      - ${PORT_HTTP}:3001
+      - ${PORT_HTTPS}:443
+
+volumes:
+  nodemodules:
+    external: true
