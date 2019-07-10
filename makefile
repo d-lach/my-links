@@ -6,3 +6,6 @@ install:
 
 dev:
 	docker-compose up
+
+shell:
+	docker-compose exec core bash
