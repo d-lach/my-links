@@ -1,8 +1,25 @@
 version: '3'
 services:
-  core:
+  database:
+    image: mongo:latest
+    container_name: ${APP_NAME}_database
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./etc/mongo:/docker-entrypoint-initdb.d:ro
+      - ./data/db:/data/db
+    ports:
+      - ${PORT_DB}:27017
+
+  server:
     image: node:${NODE_VERSION}
-    container_name: ${APP_NAME}_node
+    container_name: ${APP_NAME}_server
     volumes:
       - nodemodules:/usr/src/service/node_modules
       - ${APP_PATH}:/usr/src/service
@@ -12,6 +29,9 @@ services:
     ports:
       - ${PORT_HTTP}:3001
       - ${PORT_HTTPS}:443
+    depends_on:
+        - database
+  
 
 volumes:
   nodemodules:

@@ -1,3 +1,5 @@
+import Database from "./database/Database";
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -18,6 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
 async function start() {
+    await Database.initialize();
+
     console.log("Listening at", process.env.PORT);
     app.listen(process.env.PORT);
 }
