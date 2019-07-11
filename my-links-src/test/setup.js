@@ -8,7 +8,8 @@ dotenv.config({ path: '.test.env'});
 // Configure chai
 global.chai = chai;
 chai.use(chaiHttp);
-chai.should();
+global.should = chai.should();
+global.expect = chai.expect;
 
 // start test server instance
 global.app = require('../server').app;
