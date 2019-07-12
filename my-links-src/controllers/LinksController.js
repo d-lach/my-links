@@ -1,6 +1,8 @@
+import boundClass from 'autobind-decorator';
 // below import is needed only to specify constructor parameter type and thereby define the contract
-import LinksRepository from '../repositories/LinksRepository'
+import LinksRepository from '../repositories/LinksRepository';
 
+@boundClass
 class LinksController {
 
     /**
