@@ -1,4 +1,5 @@
 import Links from "../../repositories/LinksRepository";
+import testData from "../TestData";
 
 describe("Public links customization", () => {
 
@@ -17,12 +18,14 @@ describe("Public links customization", () => {
     });
 
     it("should create link", (done) => {
+        let target = testData.getTarget();
         chai.request(app)
             .post('/api/link')
             .set('content-type', 'application/x-www-form-urlencoded')
-            .send({name: 'named-link'})
+            .send({ target })
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.have.property('target').and.to.be.equal(target);
                 done();
             });
     });
