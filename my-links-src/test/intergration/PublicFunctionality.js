@@ -1,5 +1,4 @@
 import Links from "../../repositories/LinksRepository";
-import testData from "../TestData";
 
 describe("Public links customization", () => {
 
@@ -9,16 +8,17 @@ describe("Public links customization", () => {
 
     it("should fetch 0 links", (done) => {
         chai.request(app)
-            .get('api/link')
+            .get('/api/link')
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.have.length(0);
                 done();
             });
     });
 
     it("should create link", (done) => {
         chai.request(app)
-            .post('api/link')
+            .post('/api/link')
             .set('content-type', 'application/x-www-form-urlencoded')
             .send({name: 'named-link'})
             .end((err, res) => {
@@ -38,7 +38,7 @@ describe("Public links customization", () => {
 
     it("should create named link", (done) => {
         chai.request(app)
-            .post('api/link')
+            .post('/api/link')
             .set('content-type', 'application/x-www-form-urlencoded')
             .send({name: 'named-link'})
             .end((err, res) => {
@@ -67,7 +67,7 @@ describe("Public links customization", () => {
 
     it("should fetch 2 links", (done) => {
         chai.request(app)
-            .get('api/link/all')
+            .get('/api/link')
             .end((err, res) => {
                 res.should.have.status(200);
                 should.exist(res.data);
@@ -105,7 +105,7 @@ describe("Public links customization", () => {
 
     it("should fetch 1 link", (done) => {
         chai.request(app)
-            .get('api/link/all')
+            .get('/api/link')
             .end((err, res) => {
                 res.should.have.status(200);
                 should.exist(res.data);
