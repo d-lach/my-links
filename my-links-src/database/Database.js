@@ -11,9 +11,12 @@ export default class Database {
             initialized = false;
             console.error("DB connection error:", e);
         });
-        mongoose.connection.once("open", () => console.log("DB connected")); // () =>
+        mongoose.connection.once("open", () => console.log("DB connected"));
 
-        return mongoose.connect(Database.host, {useNewUrlParser: true})
+        return mongoose.connect(Database.host, {
+            useCreateIndex: true,
+            useNewUrlParser: true
+        })
             .catch((r) => {
                 initialized = false;
                 console.error("failed to establish DB connection");
