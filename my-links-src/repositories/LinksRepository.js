@@ -1,6 +1,11 @@
 import LinkModel from '../database/models/Link';
 
 export default {
+
+    getAll(page = 1) {
+        return LinkModel.find();
+    },
+
     removeAll() {
         return LinkModel.deleteMany({});
     },
