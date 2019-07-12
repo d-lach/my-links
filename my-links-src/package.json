@@ -13,6 +13,7 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.2.3",
     "@babel/register": "^7.2.2",
+    "autobind-decorator": "^2.4.0",
     "babel-eslint": "^10.0.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -23,6 +24,7 @@
     "morgan": "~1.9.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "mocha": "^6.1.4",
