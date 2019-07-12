@@ -1,13 +1,12 @@
 import Links from "../../repositories/LinksRepository"
+import testData from "../TestData"
 
 describe("General", () => {
 
-    let testLinks = ['bitcoin', 'ethereum', 'monero', 'litecoin', 'ripple'];
-    let getTestTarget = (link) => 'https://www.google.com/search?q=' + link;
     before(async () => {
         await Links.removeAll();
-        await Links.addMany(testLinks.map(link => ({
-            target: getTestTarget(link),
+        await Links.addMany(testData.links.map(link => ({
+            target: testData.getTarget(link),
             link,
         })));
     });
@@ -23,14 +22,14 @@ describe("General", () => {
             });
     });
 
-    for (let link of testLinks) {
-        it("server handles redirection properly (" + (testLinks.indexOf(link) + 1) + "/" + testLinks.length + ")", (done) => {
+    for (let link of testData.links) {
+        it("server handles redirection properly (" + (testData.links.indexOf(link) + 1) + "/" + testData.links.length + ")", (done) => {
             chai.request(app)
                 .get('/>/' + link)
                 .redirects(0)
                 .end((err, res) => {
                     res.should.have.status(302);
-                    res.header['location'].should.be.equal(getTestTarget(link));
+                    res.header['location'].should.be.equal(testData.getTarget(link));
                     done();
                 });
         });
