@@ -4,7 +4,8 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 
 import Database from "./database/Database";
-import indexRouter from './routes/index';
+import webRoutes from './routes/web';
+import apiRoutes from './routes/api';
 
 export const app = express();
 
@@ -14,7 +15,8 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', webRoutes);
+app.use('/api/', apiRoutes);
 
 async function start() {
     await Database.initialize();
