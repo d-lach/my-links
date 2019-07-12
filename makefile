@@ -8,7 +8,7 @@ dev:
 	docker-compose up
 
 shell:
-	docker-compose exec server bash
+	docker-compose exec server bash 2>/dev/null; true
 
 test:
 	docker-compose exec server npm run test
