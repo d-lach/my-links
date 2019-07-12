@@ -10,6 +10,7 @@ export default function (app) {
     let linksRoutes = express.Router({mergeParams: true});
 
     linksRoutes.get('/link', LinksController(app).all);
+    linksRoutes.post('/link', LinksController(app).create);
 
     router.use(linksRoutes);
 

@@ -16,6 +16,11 @@ class LinksController {
         this.links.getAll()
             .then((all) => res.status(200).send(all));
     }
+
+    create(req, res) {
+        this.links.add(req.body)
+            .then((freshLink) => res.status(200).send(freshLink))
+    }
 }
 
 export default ({links}) => new LinksController(links);

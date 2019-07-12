@@ -1,7 +1,7 @@
 import LinkModel from '../database/models/Link';
+const hashids = new (require('hashids'))();
 
 export default {
-
     getAll(page = 1) {
         return LinkModel.find();
     },
@@ -18,17 +18,18 @@ export default {
         return LinkModel.insertMany(linksData.map(this._wrapLinkData))
     },
 
-    _wrapLinkData(linkData) {
-        if (!linkData.links)
-            linkData.links = [];
+    findTarget(link) {
+        return LinkModel.findOne({ link }).select({target: 1, _id: 0});
+    },
 
-        if (linkData.link)
-            linkData.links.push(linkData.link);
+    _wrapLinkData(linkData) {
+        if (!linkData.link)
+            linkData.link = this._generateRandomUniqueId();
 
         return new LinkModel(linkData);
     },
 
-    findTarget(link) {
-        return LinkModel.findOne({ links: link }).select({target: 1, _id: 0});
-    }
+    _generateRandomUniqueId() {
+        return hashids.encode(Date.now());
+    },
 }
