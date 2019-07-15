@@ -2,6 +2,7 @@ import Links from "../../repositories/LinksRepository";
 import testData from "../TestData";
 
 describe("Public links customization", () => {
+    let recentLink = null;
 
     before(async () => {
         await Links.removeAll();
@@ -19,6 +20,7 @@ describe("Public links customization", () => {
 
     it("should create link", (done) => {
         let target = testData.getTarget();
+
         chai.request(app)
             .post('/api/link')
             .set('content-type', 'application/x-www-form-urlencoded')
@@ -26,13 +28,15 @@ describe("Public links customization", () => {
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.have.property('target').and.to.be.equal(target);
+                res.body.should.have.property('link').and.not.to.be.empty;
+                recentLink = res.body;
                 done();
             });
     });
 
     it("should get single link by id", (done) => {
         chai.request(app)
-            .get('/link/:id')
+            .get('/api/link/' + recentLink.link)
             .end((err, res) => {
                 res.should.have.status(200);
                 done();

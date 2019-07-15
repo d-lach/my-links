@@ -18,18 +18,26 @@ export default {
         return LinkModel.insertMany(linksData.map(this._wrapLinkData))
     },
 
+    get(id) {
+        return LinkModel.findById(id);
+    },
+
+    find(link) {
+        return LinkModel.findOne({ link });
+    },
+
     findTarget(link) {
         return LinkModel.findOne({ link }).select({target: 1, _id: 0});
     },
 
     _wrapLinkData(linkData) {
         if (!linkData.link)
-            linkData.link = this._generateRandomUniqueId();
+            linkData.link = this._generateUniqueId();
 
         return new LinkModel(linkData);
     },
 
-    _generateRandomUniqueId() {
+    _generateUniqueId() {
         return hashids.encode(Date.now());
     },
 }

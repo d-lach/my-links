@@ -5,10 +5,11 @@ describe("General", () => {
 
     before(async () => {
         await Links.removeAll();
-        await Links.addMany(testData.links.map(link => ({
-            target: testData.getTarget(link),
-            link,
-        })));
+        await Links.addMany(
+            testData.links.map(link => ({
+                target: testData.getTarget(link),
+                link,
+            })));
     });
 
     it("server should be up and running", (done) => {
