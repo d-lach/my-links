@@ -15,8 +15,8 @@ services:
       DB_TEST_USERNAME: ${DB_TEST_USER}
       DB_TEST_PASSWORD: ${DB_TEST_PASSWORD}
     volumes:
-      - ./etc/mongo:/docker-entrypoint-initdb.d:ro
-      - ./data/db:/data/db
+      - ./docker/etc/mongo:/docker-entrypoint-initdb.d:ro
+      - ./docker/data/db:/data/db
     ports:
       - ${PORT_DB}:27017
 
@@ -35,7 +35,6 @@ services:
     depends_on:
         - database
   
-
 volumes:
   nodemodules:
     external: true

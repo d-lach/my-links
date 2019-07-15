@@ -1,6 +1,11 @@
+.PHONY: install test shell clean
+
+include ./docker/.env
+export
+
 install:
-	[ ! -f ./my-links-src/.env ] && cp ./my-links-src/.env.example ./my-links-src/.env 2>/dev/null; true
-	[ ! -f ./my-links-src/.test.env ] && cp ./my-links-src/.env.example ./my-links-src/.test.env 2>/dev/null; true
+	[ ! -f ./.env ] && cp ./.env.example ./.env 2>/dev/null; true
+	[ ! -f ./.test.env ] && cp ./.env.example ./.test.env 2>/dev/null; true
 	docker volume create nodemodules
 	docker-compose -f docker-compose.builder.yml run --rm install
 
@@ -15,7 +20,7 @@ test:
 
 clean:
 	docker-compose down
-	sudo rm -rf ./data
-	rm ./my-links-src/package-lock.json
 	docker volume rm nodemodules
-
+	sudo rm -rf ./docker/data
+	rm ./package-lock.json
+	
