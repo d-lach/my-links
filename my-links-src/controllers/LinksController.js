@@ -1,26 +1,29 @@
-import boundClass from 'autobind-decorator';
-// below import is needed only to specify constructor parameter type and thereby define the contract
-import LinksRepository from '../repositories/LinksRepository';
+import Controller from "./Controller";
 
-@boundClass
-class LinksController {
+class LinksController extends Controller {
 
     /**
-     * @param { LinksRepository } links
+     * @param { {links} }  links
      */
-    constructor(links) {
+    constructor({links}) {
+        super();
         this.links = links;
     }
 
-    all(req, res){
+    all(req){
         this.links.getAll()
-            .then((all) => res.status(200).send(all));
+            .then(this.send);
     }
 
-    create(req, res) {
+    show(req) {
+        this.links.find(req.params.link)
+            .then(this.send);
+    }
+
+    create(req) {
         this.links.add(req.body)
-            .then((freshLink) => res.status(200).send(freshLink))
+            .then(this.send);
     }
 }
 
-export default ({links}) => new LinksController(links);
+export default LinksController.factory;

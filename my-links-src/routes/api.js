@@ -1,4 +1,4 @@
-import LinksController from "../controllers/LinksController";
+import LinksControllerFactory from "../controllers/LinksController";
 
 /**
  * @param { {links} } app
@@ -8,9 +8,11 @@ export default function (app) {
     let router = express.Router();
 
     let linksRoutes = express.Router({mergeParams: true});
+    let linksController = LinksControllerFactory(app);
 
-    linksRoutes.get('/link', LinksController(app).all);
-    linksRoutes.post('/link', LinksController(app).create);
+    linksRoutes.get('/link', linksController.all);
+    linksRoutes.get('/link/:id', linksController.show);
+    linksRoutes.post('/link', linksController.create);
 
     router.use(linksRoutes);
 
