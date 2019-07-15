@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --exec \"babel-node -r node_modules/dotenv/config\" server.js",
+    "dev": "nodemon --exec \"babel-node -r node_modules/dotenv/config\" server/server.js dotenv_config_path=server/.env",
     "test": "mocha --require @babel/register --require @babel/polyfill --recursive --exit || exit 0"
   },
   "dependencies": {

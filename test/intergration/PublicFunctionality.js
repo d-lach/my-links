@@ -1,4 +1,4 @@
-import Links from "../../repositories/LinksRepository";
+import Links from "../../server/repositories/LinksRepository";
 import testData from "../TestData";
 
 describe("Public links customization", () => {

@@ -26,8 +26,8 @@ app.use('/api/', apiRoutes(appBootstrap));
 async function start() {
     await Database.initialize();
     await new Promise((resolve, reject) => {
-        app.listen(process.env.PORT, () => {
-            console.log("Listening at", process.env.PORT);
+        app.listen(process.env.APP_PORT, () => {
+            console.log("Listening at", process.env.APP_PORT);
             resolve();
         });
     });

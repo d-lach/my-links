@@ -3,7 +3,7 @@ import chaiHttp from 'chai-http';
 
 // load test config
 import dotenv from 'dotenv';
-dotenv.config({ path: '.test.env'});
+dotenv.config({ path: 'test/.env'});
 
 // Configure chai
 global.chai = chai;
@@ -12,7 +12,7 @@ global.should = chai.should();
 global.expect = chai.expect;
 
 // start test server instance
-global.app = require('../server').app;
+global.app = require('../server/server').app;
 before(done => app.on( "ready", done));
 
 

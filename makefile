@@ -4,8 +4,8 @@ include ./docker/.env
 export
 
 install:
-	[ ! -f ./.env ] && cp ./.env.example ./.env 2>/dev/null; true
-	[ ! -f ./.test.env ] && cp ./.env.example ./.test.env 2>/dev/null; true
+	[ ! -f ./server/.env ] && cp ./server/.env.example ./server/.env 2>/dev/null; true
+	[ ! -f ./server/.test.env ] && cp ./server/.env.example ./server/.test.env 2>/dev/null; true
 	docker volume create nodemodules
 	docker-compose -f docker-compose.builder.yml run --rm install
 
