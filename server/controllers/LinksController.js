@@ -31,6 +31,21 @@ class LinksController extends Controller {
         this.links.add(req.body)
             .then(this.updated);
     }
+
+    update(req) {
+        this.links.modify(req.params.link, req.body.target)
+            .then((link) => {
+                if (!link)
+                    Errors.notFound.throw();
+                return link;
+            })
+            .then(this.updated)
+            .catch(this.handleError);
+    }
+
+    destroy(req) {
+
+    }
 }
 
 export default LinksController.factory;

@@ -22,6 +22,18 @@ export default {
         return LinkModel.findById(id);
     },
 
+    async modify(link, newTarget) {
+        link = await LinkModel.findOne({link});
+
+        if (!link)
+            return null;
+
+        link.target = newTarget;
+        await link.save();
+
+        return link;
+    },
+
     find(link) {
         return LinkModel.findOne({ link });
     },

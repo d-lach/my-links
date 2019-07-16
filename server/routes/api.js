@@ -13,6 +13,8 @@ export default function (app) {
     linksRoutes.get('/link', linksController.all);
     linksRoutes.get('/link/:link', linksController.show);
     linksRoutes.post('/link', linksController.create);
+    linksRoutes.put('/link/:link', linksController.update);
+    linksRoutes.delete('/link/:link', linksController.destroy);
 
     router.use(linksRoutes);
 

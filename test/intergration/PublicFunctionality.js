@@ -8,7 +8,7 @@ describe("Public links customization", () => {
         await Links.removeAll();
     });
 
-    it("should fetch 0 links", (done) => {
+    it("should fetch empty links list", (done) => {
         chai.request(app)
             .get('/api/link')
             .end((err, res) => {
@@ -19,7 +19,7 @@ describe("Public links customization", () => {
     });
 
     it("should create link", (done) => {
-        let target = testData.getTarget();
+        let target = testData.next().value.target;
 
         chai.request(app)
             .post('/api/link')
@@ -46,7 +46,7 @@ describe("Public links customization", () => {
     });
 
     it("should create named link", (done) => {
-        let testLink = testData.getLinkData();
+        let testLink = testData.next().value;
 
         chai.request(app)
             .post('/api/link')
@@ -74,7 +74,7 @@ describe("Public links customization", () => {
 
     it("should handle invalid link request", (done) => {
         chai.request(app)
-            .get('/link/invalid-link-name')
+            .get('/api/link/invalid-link-name')
             .end((err, res) => {
                 res.should.have.status(404);
                 done();
@@ -92,18 +92,34 @@ describe("Public links customization", () => {
             });
     });
 
-    it("should modify one link by id", (done) => {
+    it("should modify link", (done) => {
+        let testLink = testData.next().value;
+
         chai.request(app)
-            .patch('/link/:id')
+            .put('/api/link/' + recentLink.link)
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send({ target: testLink.target })
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(201);
+                res.body.should.have.property('link').and.to.be.equal(recentLink.link);
+                res.body.should.have.property('target').and.to.be.equal(testLink.target);
+                recentLink = res.body;
+                done();
+            });
+    });
+
+    it("should handle update of invalid link", (done) => {
+        chai.request(app)
+            .delete('/link/invalid-link-name')
+            .end((err, res) => {
+                res.should.have.status(404);
                 done();
             });
     });
 
     it("should remove one link by id", (done) => {
         chai.request(app)
-            .delete('/link/:id')
+            .delete('/link/' + recentLink.link)
             .end((err, res) => {
                 res.should.have.status(200);
                 done();

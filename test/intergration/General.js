@@ -2,14 +2,11 @@ import Links from "../../server/repositories/LinksRepository"
 import testData from "../TestData"
 
 describe("General", () => {
+    let testLinks = [...Array(5).keys()].map(() => testData.next().value);
 
     before(async () => {
         await Links.removeAll();
-        await Links.addMany(
-            testData.links.map(link => ({
-                target: testData.getTarget(link),
-                link,
-            })));
+        await Links.addMany(testLinks);
     });
 
     it("server should be up and running", (done) => {
@@ -23,14 +20,14 @@ describe("General", () => {
             });
     });
 
-    for (let link of testData.links) {
-        it("server handles redirection properly (" + (testData.links.indexOf(link) + 1) + "/" + testData.links.length + ")", (done) => {
+    for (let linkData of testLinks) {
+        it("server handles redirection properly (" + (testLinks.indexOf(linkData) + 1) + "/" + testLinks.length + ")", (done) => {
             chai.request(app)
-                .get('/>/' + link)
+                .get('/>/' + linkData.link)
                 .redirects(0)
                 .end((err, res) => {
                     res.should.have.status(302);
-                    res.header['location'].should.be.equal(testData.getTarget(link));
+                    res.header['location'].should.be.equal(linkData.target);
                     done();
                 });
         });

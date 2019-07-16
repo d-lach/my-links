@@ -1,19 +1,13 @@
-export default {
-    links: ['bitcoin', 'ethereum', 'monero', 'litecoin', 'ripple'],
+const links = ['bitcoin', 'ethereum', 'monero', 'litecoin', 'ripple'];
 
-    getTarget (link = null) {
-        if (!link)
-            link = this.links[0];
-        return 'https://www.google.com/search?q=' + link;
-    },
-
-    getLinkData(link = null) {
-        if (!link)
-            link = this.links[0];
-
-        return {
-            link,
-            target: this.getTarget(link)
-        }
-    }
+function getTarget(link) {
+    return 'https://www.google.com/search?q=' + link;
 }
+
+export default (function* generator () {
+    for (let i = 0; true; i = (++i) % links.length)
+        yield {
+            link: links[i],
+            target: getTarget(links[i])
+        };
+})();
