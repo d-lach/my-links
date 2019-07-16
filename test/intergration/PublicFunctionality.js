@@ -74,9 +74,9 @@ describe("Public links customization", () => {
 
     it("should inform about missing link (4xx)", (done) => {
         chai.request(app)
-            .get('/link/:name')
+            .get('/link/invalid-link-name')
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(404);
                 done();
             });
     });

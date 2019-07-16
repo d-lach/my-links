@@ -1,4 +1,5 @@
 import Controller from "./Controller";
+import {Errors} from "../services/ErrorsHandler";
 
 class LinksController extends Controller {
 
@@ -10,14 +11,20 @@ class LinksController extends Controller {
         this.links = links;
     }
 
-    all(req){
+    all(req) {
         this.links.getAll()
             .then(this.send);
     }
 
     show(req) {
         this.links.find(req.params.link)
-            .then(this.send);
+            .then((link) => {
+                if (!link)
+                    Errors.notFound.throw();
+                return link;
+            })
+            .then(this.send)
+            .catch(this.handleError);
     }
 
     create(req) {

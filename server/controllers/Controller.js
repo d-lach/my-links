@@ -1,4 +1,5 @@
 import boundMethod from 'autobind-decorator';
+import Errors from '../services/ErrorsHandler';
 
 export default class Controller {
 
@@ -14,6 +15,7 @@ export default class Controller {
         // will be set dynamically
         this.req = null;
         this.res = null;
+        this.next = null;
     }
 
     @boundMethod
@@ -36,12 +38,19 @@ export default class Controller {
         return this.res.status(204).send()
     }
 
+    @boundMethod
+    handleError(error) {
+        return this.next(error);
+    }
+
+
     _setupRequestInterceptor() {
         let proxy = new Proxy(this, {
             get(instance, property) {
-                return (req, res) => {
+                return (req, res, next) => {
                     instance.req = req;
                     instance.res = res;
+                    instance.next = next;
                     instance[property](req, res);
                 };
             }

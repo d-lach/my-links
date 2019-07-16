@@ -7,6 +7,7 @@ import Database from "./database/Database";
 import webRoutes from './routes/web';
 import apiRoutes from './routes/api';
 import LinksRepository from "./repositories/LinksRepository";
+import { ErrorsHandler } from "./services/ErrorsHandler";
 
 export const app = express();
 
@@ -22,6 +23,7 @@ let appBootstrap = {
 
 app.use('/', webRoutes(appBootstrap));
 app.use('/api/', apiRoutes(appBootstrap));
+app.use(ErrorsHandler);
 
 async function start() {
     await Database.initialize();
