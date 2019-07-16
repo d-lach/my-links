@@ -110,7 +110,7 @@ describe("Public links customization", () => {
 
     it("should handle update of invalid link", (done) => {
         chai.request(app)
-            .delete('/link/invalid-link-name')
+            .delete('/api/link/invalid-link-name')
             .end((err, res) => {
                 res.should.have.status(404);
                 done();
@@ -119,16 +119,16 @@ describe("Public links customization", () => {
 
     it("should remove one link by id", (done) => {
         chai.request(app)
-            .delete('/link/' + recentLink.link)
+            .delete('/api/link/' + recentLink.link)
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(204);
                 done();
             });
     });
 
     it("should handle removal of non existent link", (done) => {
         chai.request(app)
-            .delete('/link/invalid-link-name')
+            .delete('/api/link/invalid-link-name')
             .end((err, res) => {
                 res.should.have.status(404);
                 done();

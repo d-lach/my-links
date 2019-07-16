@@ -1,4 +1,5 @@
 import LinkModel from '../database/models/Link';
+
 const hashids = new (require('hashids'))();
 
 export default {
@@ -35,11 +36,18 @@ export default {
     },
 
     find(link) {
-        return LinkModel.findOne({ link });
+        return LinkModel.findOne({link});
     },
 
     findTarget(link) {
-        return LinkModel.findOne({ link }).select({target: 1, _id: 0});
+        return LinkModel.findOne({link}).select({target: 1, _id: 0});
+    },
+
+    remove(link) {
+        return LinkModel.deleteOne({link})
+            .then(results => {
+                return results.deletedCount > 0;
+            });
     },
 
     _wrapLinkData(linkData) {

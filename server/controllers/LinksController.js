@@ -13,7 +13,8 @@ class LinksController extends Controller {
 
     all(req) {
         this.links.getAll()
-            .then(this.send);
+            .then(this.send)
+            .catch(this.handleError);
     }
 
     show(req) {
@@ -29,7 +30,8 @@ class LinksController extends Controller {
 
     create(req) {
         this.links.add(req.body)
-            .then(this.updated);
+            .then(this.updated)
+            .catch(this.handleError);
     }
 
     update(req) {
@@ -44,7 +46,13 @@ class LinksController extends Controller {
     }
 
     destroy(req) {
-
+        this.links.remove(req.params.link)
+            .then((isSuccess) => {
+                if (!isSuccess)
+                    Errors.notFound.throw();
+            })
+            .then(this.deleted)
+            .catch(this.handleError);
     }
 }
 
