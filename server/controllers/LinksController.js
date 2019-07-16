@@ -22,7 +22,7 @@ class LinksController extends Controller {
 
     create(req) {
         this.links.add(req.body)
-            .then(this.send);
+            .then(this.updated);
     }
 }
 

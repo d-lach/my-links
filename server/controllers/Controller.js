@@ -21,6 +21,21 @@ export default class Controller {
         return this.res.status(200).send(payload)
     }
 
+    @boundMethod
+    updated(payload) {
+        return this.res.status(201).send(payload)
+    }
+
+    @boundMethod
+    accepted() {
+        return this.res.status(202).send()
+    }
+
+    @boundMethod
+    deleted() {
+        return this.res.status(204).send()
+    }
+
     _setupRequestInterceptor() {
         let proxy = new Proxy(this, {
             get(instance, property) {
