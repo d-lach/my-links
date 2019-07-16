@@ -26,7 +26,7 @@ describe("Public links customization", () => {
             .set('content-type', 'application/x-www-form-urlencoded')
             .send({ target })
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(201);
                 res.body.should.have.property('target').and.to.be.equal(target);
                 res.body.should.have.property('link').and.not.to.be.empty;
                 recentLink = res.body;
@@ -34,31 +34,40 @@ describe("Public links customization", () => {
             });
     });
 
-    it("should get single link by id", (done) => {
+    it("should get single link", (done) => {
         chai.request(app)
             .get('/api/link/' + recentLink.link)
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.have.property('target').and.to.be.equal(recentLink.target);
+                res.body.should.have.property('link').and.to.be.equal(recentLink.link);
                 done();
             });
     });
 
     it("should create named link", (done) => {
+        let testLink = testData.getLinkData();
+
         chai.request(app)
             .post('/api/link')
             .set('content-type', 'application/x-www-form-urlencoded')
-            .send({name: 'named-link'})
+            .send(testLink)
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(201);
+                res.body.should.have.property('target').and.to.be.equal(testLink.target);
+                res.body.should.have.property('link').and.to.be.equal(testLink.link);
+                recentLink = res.body;
                 done();
             });
     });
 
-    it("should get single link by name", (done) => {
+    it("should get single named link", (done) => {
         chai.request(app)
-            .get('/link/:name')
+            .get('/api/link/' + recentLink.link)
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.have.property('target').and.to.be.equal(recentLink.target);
+                res.body.should.have.property('link').and.to.be.equal(recentLink.link);
                 done();
             });
     });

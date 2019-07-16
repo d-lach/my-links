@@ -11,7 +11,7 @@ export default function (app) {
     let linksController = LinksControllerFactory(app);
 
     linksRoutes.get('/link', linksController.all);
-    linksRoutes.get('/link/:id', linksController.show);
+    linksRoutes.get('/link/:link', linksController.show);
     linksRoutes.post('/link', linksController.create);
 
     router.use(linksRoutes);
