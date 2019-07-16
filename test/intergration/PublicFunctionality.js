@@ -72,7 +72,7 @@ describe("Public links customization", () => {
             });
     });
 
-    it("should inform about missing link (4xx)", (done) => {
+    it("should handle invalid link request", (done) => {
         chai.request(app)
             .get('/link/invalid-link-name')
             .end((err, res) => {
@@ -81,13 +81,13 @@ describe("Public links customization", () => {
             });
     });
 
-    it("should fetch 2 links", (done) => {
+    it("should fetch few links", (done) => {
         chai.request(app)
             .get('/api/link')
             .end((err, res) => {
                 res.should.have.status(200);
-                should.exist(res.data);
-                res.data.should.have.length(2);
+                should.exist(res.body);
+                res.body.should.have.length(2);
                 done();
             });
     });
@@ -112,9 +112,9 @@ describe("Public links customization", () => {
 
     it("should handle removal of non existent link", (done) => {
         chai.request(app)
-            .delete('/link/:id')
+            .delete('/link/invalid-link-name')
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(404);
                 done();
             });
     });
@@ -124,8 +124,8 @@ describe("Public links customization", () => {
             .get('/api/link')
             .end((err, res) => {
                 res.should.have.status(200);
-                should.exist(res.data);
-                res.data.should.have.length(2);
+                should.exist(res.body);
+                res.body.should.have.length(1);
                 done();
             });
     });
