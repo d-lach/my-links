@@ -1,5 +1,5 @@
 import Links from "../../server/repositories/LinksRepository";
-import testData from "../TestData";
+import { testLinks } from "../TestData";
 
 describe("Public links customization", () => {
     let recentLink = null;
@@ -19,7 +19,7 @@ describe("Public links customization", () => {
     });
 
     it("should create link", (done) => {
-        let target = testData.next().value.target;
+        let target = testLinks.next().value.target;
 
         chai.request(app)
             .post('/api/link')
@@ -46,7 +46,7 @@ describe("Public links customization", () => {
     });
 
     it("should create named link", (done) => {
-        let testLink = testData.next().value;
+        let testLink = testLinks.next().value;
 
         chai.request(app)
             .post('/api/link')
@@ -93,7 +93,7 @@ describe("Public links customization", () => {
     });
 
     it("should modify link", (done) => {
-        let testLink = testData.next().value;
+        let testLink = testLinks.next().value;
 
         chai.request(app)
             .put('/api/link/' + recentLink.link)

@@ -1,9 +1,24 @@
+import Users from "../../server/repositories/UsersRepository";
+import {testUsers} from "../TestData";
+
 describe("Private links management", () => {
+    before(async () => {
+        await Users.removeAll();
+    });
+
     it("should register new user", (done) => {
+        let tester = testUsers.next().value;
         chai.request(app)
-            .post('/user/new')
+            .post('/api/anonymous')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send({
+                email: tester.email,
+                password: tester.password
+            })
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(201);
+                res.body.should.have.property('permissions').and.to.be.equal(1);
+                res.body.should.have.property('email').and.to.be.equal(tester.email);
                 done();
             });
     });

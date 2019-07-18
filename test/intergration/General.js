@@ -1,12 +1,12 @@
 import Links from "../../server/repositories/LinksRepository"
-import testData from "../TestData"
+import { testLinks } from "../TestData"
 
 describe("General", () => {
-    let testLinks = [...Array(5).keys()].map(() => testData.next().value);
+    let testData = [...Array(5).keys()].map(() => testLinks.next().value);
 
     before(async () => {
         await Links.removeAll();
-        await Links.addMany(testLinks);
+        await Links.addMany(testData);
     });
 
     it("server should be up and running", (done) => {
@@ -20,8 +20,8 @@ describe("General", () => {
             });
     });
 
-    for (let linkData of testLinks) {
-        it("server handles redirection properly (" + (testLinks.indexOf(linkData) + 1) + "/" + testLinks.length + ")", (done) => {
+    for (let linkData of testData) {
+        it("server handles redirection properly (" + (testData.indexOf(linkData) + 1) + "/" + testData.length + ")", (done) => {
             chai.request(app)
                 .get('/>/' + linkData.link)
                 .redirects(0)
