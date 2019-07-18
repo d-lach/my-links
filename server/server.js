@@ -6,8 +6,7 @@ import logger from 'morgan';
 import Database from "./database/Database";
 import webRoutes from './routes/web';
 import apiRoutes from './routes/api';
-import LinksRepository from "./repositories/LinksRepository";
-import { ErrorsHandler } from "./services/ErrorsHandler";
+import appBootstrap from './bootstrap';
 
 export const app = express();
 
@@ -17,13 +16,9 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-let appBootstrap = {
-    links: LinksRepository
-};
-
 app.use('/', webRoutes(appBootstrap));
-app.use('/api/', apiRoutes(appBootstrap));
-app.use(ErrorsHandler);
+app.use('/api', apiRoutes(appBootstrap));
+app.use(appBootstrap.middleware.errorsHandler);
 
 async function start() {
     await Database.initialize();

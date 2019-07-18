@@ -1,7 +1,4 @@
-import boundMethod from 'autobind-decorator';
-import Errors from '../services/ErrorsHandler';
-
-export default class Controller {
+export default class RequestInterceptor {
 
     static get factory() {
         return (app) => {
@@ -18,32 +15,6 @@ export default class Controller {
         this.next = null;
     }
 
-    @boundMethod
-    send(payload) {
-        return this.res.status(200).send(payload)
-    }
-
-    @boundMethod
-    updated(payload) {
-        return this.res.status(201).send(payload)
-    }
-
-    @boundMethod
-    accepted() {
-        return this.res.status(202).send()
-    }
-
-    @boundMethod
-    deleted() {
-        return this.res.status(204).send()
-    }
-
-    @boundMethod
-    handleError(error) {
-        return this.next(error);
-    }
-
-
     _setupRequestInterceptor() {
         let proxy = new Proxy(this, {
             get(instance, property) {
@@ -51,7 +22,7 @@ export default class Controller {
                     instance.req = req;
                     instance.res = res;
                     instance.next = next;
-                    instance[property](req, res);
+                    instance[property](req, res, next);
                 };
             }
         });

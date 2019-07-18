@@ -1,5 +1,5 @@
-import Controller from "./Controller";
-import {Errors} from "../services/ErrorsHandler";
+import Controller from "../framework/Controller";
+import Errors from "../Errors";
 
 class LinksController extends Controller {
 

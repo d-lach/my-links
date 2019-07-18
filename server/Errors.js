@@ -1,4 +1,4 @@
-export class Errors {
+export default class Errors {
     static get invalidRequest() {
         return Errors._createError(ErrorType.InvalidRequest, "Provided data are malformed");
     }
@@ -13,6 +13,14 @@ export class Errors {
 
     static get notFound() {
         return Errors._createError(ErrorType.NotFound, "Requested resource does not exist");
+    }
+
+    static get missingToken() {
+        return Errors._createError(ErrorType.MissingToken, "Token required");
+    }
+
+    static get emailInUse() {
+        return Errors._createError(ErrorType.EmailInUse, "Email already in use");
     }
 
     static _createError(type, msg) {
@@ -45,43 +53,14 @@ export class Errors {
     }
 };
 
-export function ErrorsHandler(err, req, res, next) {
-    // console.log("HANDLING SOME ERROR YO:", err);
-
-    // custom application error
-    if (typeof (err) === 'string') {
-        return res.status(500).json({message: err});
-    }
-
-    let errorResponse = {
-        message: err.message
-    };
-
-    switch (err.name) {
-        case ErrorType.InvalidRequest:
-        case ErrorType.ModelValidation:
-        case ErrorType.InvalidCredentials:
-            return res.status(400).json(errorResponse);
-
-        case ErrorType.TokenExpired:
-            errorResponse.message = 'Invalid Token';
-        case ErrorType.Unauthorized:
-            return res.status(401).json(errorResponse);
-
-        case ErrorType.NotFound:
-            return res.status(404).json(errorResponse);
-
-        default:
-            return res.status(500).json(errorResponse);
-    }
-}
-
-const ErrorType = {
+export const ErrorType = {
     InvalidRequest: "Invalid request",
     Unauthorized: "Unauthorized",
     InvalidCredentials: "Invalid credentials",
+    MissingToken: "Missing token",
     NotFound: "Not found",
-    ModelValidation: "ValidationError", // mongoose validation error
+    EmailInUse: "Email in use",
+    InvalidModel: "ValidationError", // mongoose validation error
     TokenExpired: "TokenExpiredError" // jwt authentication error
 };
 
