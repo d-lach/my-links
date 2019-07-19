@@ -4,11 +4,11 @@ import Errors from "../Errors";
 class LinksController extends Controller {
 
     /**
-     * @param { {links} }  links
+     * @param { {linksRepository} }  links
      */
-    constructor({links}) {
+    constructor({linksRepository}) {
         super();
-        this.links = links;
+        this.links = linksRepository;
     }
 
     all(req) {

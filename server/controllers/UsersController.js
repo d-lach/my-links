@@ -1,14 +1,13 @@
 import Controller from "../framework/Controller";
-import Errors from "../Errors";
 
 class UsersController extends Controller {
 
     /**
-     * @param { {links} }  links
+     * @param { {usersRepository} }  users
      */
-    constructor({users}) {
+    constructor({usersRepository}) {
         super();
-        this.users = users;
+        this.users = usersRepository;
     }
 
     index(req) {
@@ -16,10 +15,10 @@ class UsersController extends Controller {
     }
 
     logIn(req) {
-
+        this.send("not implemented");
     }
 
-    async create(req) {
+    async signUp(req) {
         this.users.create(req.body)
             .then(this.updated)
             .catch(this.handleError);

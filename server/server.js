@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', webRoutes(appBootstrap));
 app.use('/api', apiRoutes(appBootstrap));
-app.use(appBootstrap.middleware.errorsHandler);
+app.use(appBootstrap.errorsHandler.handle);
 
 async function start() {
     await Database.initialize();

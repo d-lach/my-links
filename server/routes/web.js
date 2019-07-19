@@ -1,5 +1,5 @@
 /**
- * @param { {links} } app
+ * @param { {linksRepository} } app
  */
 export default function (app) {
     let express = require('express');
@@ -10,7 +10,7 @@ export default function (app) {
     });
 
     router.get(encodeURI('/>/:link'), function (req, res, next) {
-        app.links.findTarget(req.params.link)
+        app.linksRepository.findTarget(req.params.link)
             .then(({target}) => {
                 res.redirect(target);
             })

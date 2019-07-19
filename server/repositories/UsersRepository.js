@@ -3,14 +3,18 @@ import Errors from "../Errors";
 
 const bcrypt = require('bcrypt');
 
-export default {
+export default class UsersRepository {
+
+    constructor() {
+    }
+
     getAll() {
         return UserModel.find();
-    },
+    }
 
     removeAll() {
         return UserModel.deleteMany({});
-    },
+    }
 
     create(userData) {
         return this._prepareNewUser(userData)
@@ -20,20 +24,20 @@ export default {
                     Errors.emailInUse.throw();
                 throw err;
             });
-    },
+    }
 
     addMany(usersData) {
         return Promise.all(usersData.map(this._prepareNewUser))
             .then(UserModel.insertMany);
-    },
+    }
 
     get(id) {
         return UserModel.findById(id);
-    },
+    }
 
     find(email) {
         return UserModel.findOne({email});
-    },
+    }
 
     async _prepareNewUser(userData) {
         try {
@@ -43,5 +47,5 @@ export default {
             Errors.invalidRequest.message("Cannot hash given password").throw();
         }
         return new UserModel(userData);
-    },
+    }
 }
