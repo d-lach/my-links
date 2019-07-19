@@ -18,11 +18,12 @@ export default class AuthService {
 
         let configPath = path.join(__dirname, '..', '..', ".config");
         this.keys = {
-            private: fs.readFileSync(path.join(configPath, 'jwt-key'), 'utf8'),
-            public: fs.readFileSync(path.join(configPath, 'jwt-key.pub'), 'utf8'),
+            private: fs.readFileSync(path.join(configPath, 'jwt.key'), 'utf8'),
+            public: fs.readFileSync(path.join(configPath, 'jwt.key.pub'), 'utf8'),
         };
 
         this.signConfig = Object.assign({algorithm: "RS256"}, this.jwtConfig);
+        this.verificationConfig = Object.assign({algorithm: ["RS256"]}, this.jwtConfig);
     }
 
     async signIn({email, password}) {
@@ -31,6 +32,16 @@ export default class AuthService {
             Errors.invalidCredentials.throw();
         return this.refreshToken(user);
     }
+
+    async retrieveUser(token) {
+        let userId = jwt.verify(token, this.keys.public, this.verificationConfig).id;
+        let user = await this.users.get(userId);
+
+        if (!user)
+            Errors.invalidToken.throw();
+
+        return user;
+    };
 
     generateTokenPayload(user) {
         return {

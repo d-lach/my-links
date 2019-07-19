@@ -19,6 +19,10 @@ export default class Errors {
         return Errors._createError(ErrorType.MissingToken, "Token required");
     }
 
+    static get invalidToken() {
+        return Errors._createError(ErrorType.MissingToken, "Token is invalid");
+    }
+
     static get emailInUse() {
         return Errors._createError(ErrorType.EmailInUse, "Email already in use");
     }
@@ -61,6 +65,7 @@ export const ErrorType = {
     NotFound: "Not found",
     EmailInUse: "Email in use",
     InvalidModel: "ValidationError", // mongoose validation error
-    TokenExpired: "TokenExpiredError" // jwt authentication error
+    TokenExpired: "TokenExpiredError", // jwt authentication error
+    InvalidToken: "InvalidToken" // jwt authentication error
 };
 

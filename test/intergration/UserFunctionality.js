@@ -28,15 +28,19 @@ describe("Private links management", () => {
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.have.property('token').and.not.to.be.empty;
+                tester.token = res.body.token;
                 done();
             });
     });
 
     it("should get user info", (done) => {
         chai.request(app)
-            .get('/user')
+            .get('/api/user/me')
+            .set('Cookie', 'token=' + tester.token)
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.have.property('email').and.to.be.equal(tester.email);
+                res.body.should.have.property('permissions').and.to.be.equal(1);
                 done();
             });
     });

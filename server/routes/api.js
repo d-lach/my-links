@@ -5,6 +5,8 @@ export default function (app) {
     let express = require('express');
     let router = express.Router();
 
+    let {jwtAuth, userSetter} = app.authorization;
+
     let linksRoutes = express.Router({mergeParams: true});
 
     linksRoutes.get('/', app.linksController.all);
@@ -23,6 +25,7 @@ export default function (app) {
     publicUserRoutes.post('/', app.usersController.signUp);
     publicUserRoutes.post('/login', app.usersController.logIn);
 
+    router.use('/user', [jwtAuth, usersRoutes]);
     router.use('/anonymous', publicUserRoutes);
 
     return router;
