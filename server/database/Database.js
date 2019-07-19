@@ -1,24 +1,60 @@
 const mongoose = require('mongoose');
 
-let initialized = false;
+let initializing = false;
+let upAndRunning = false;
+let isSetup = false;
+let maxRetries = 3;
 
 export default class Database {
-    static initialize() {
-        if (initialized)
+    static isUp() {
+        return upAndRunning;
+    }
+
+    static async initialize() {
+        if (initializing)
             return Promise.resolve();
-        initialized = true;
+
+        initializing = true;
+        Database.setup();
+
+        let attempt = 0;
+        while (!Database.isUp() && attempt < maxRetries) {
+            try {
+                await Database.up();
+            } catch {
+                await (new Promise(resolve => setTimeout(resolve, 1000)));
+                attempt++;
+            }
+        }
+
+        if (!Database.isUp())
+            throw new Error("Cannot connect do database");
+    }
+
+    static setup() {
+        if (isSetup) {
+            return;
+        }
+
+        isSetup = true;
         mongoose.connection.on("error", (e) => {
-            initialized = false;
+            initializing = false;
             console.error("DB connection error:", e);
         });
-        mongoose.connection.once("open", () => console.log("DB connected"));
+        mongoose.connection.once("open", () => {
+            upAndRunning = true;
+            console.log("DB connected")
+        });
+    }
 
+    static up() {
         return mongoose.connect(Database.host, {
             useCreateIndex: true,
             useNewUrlParser: true
         })
             .catch((r) => {
-                initialized = false;
+                initializing = false;
+                upAndRunning = false;
                 console.error("failed to establish DB connection");
                 throw r;
             });
