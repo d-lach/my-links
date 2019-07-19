@@ -9,7 +9,8 @@ export
 install:
 	mkdir -p $(CWD)/node_modules
 	mkdir -p $(CWD)/.config
-	ssh-keygen -t rsa -f $(CWD)/.config/jwt-key
+	ssh-keygen -t rsa -b 4096 -m PEM -f $(CWD)/.config/jwt.key
+	openssl rsa -in $(CWD)/.config/jwt.key -pubout -outform PEM -out $(CWD)/.config/jwt.key.pub
 	[ ! -f $(CWD)/server/.env ] && cp $(CWD)/server/.env.example $(CWD)/server/.env 2>/dev/null; true
 	[ ! -f $(CWD)/server/.test.env ] && cp $(CWD)/server/.env.example $(CWD)/server/.test.env 2>/dev/null; true
 	docker volume create -d local -o type=none -o o=bind -o device=$(CWD)/node_modules nodemodules
