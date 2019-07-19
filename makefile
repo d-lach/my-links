@@ -7,7 +7,9 @@ include $(CWD)/docker/.env
 export
 
 install:
-	 mkdir -p $(CWD)/node_modules
+	mkdir -p $(CWD)/node_modules
+	mkdir -p $(CWD)/.config
+	ssh-keygen -t rsa -f $(CWD)/.config/jwt-key
 	[ ! -f $(CWD)/server/.env ] && cp $(CWD)/server/.env.example $(CWD)/server/.env 2>/dev/null; true
 	[ ! -f $(CWD)/server/.test.env ] && cp $(CWD)/server/.env.example $(CWD)/server/.test.env 2>/dev/null; true
 	docker volume create -d local -o type=none -o o=bind -o device=$(CWD)/node_modules nodemodules
@@ -29,5 +31,7 @@ clean:
 	fi
 	sudo rm -rf $(CWD)/docker/data
 	sudo rm -rf $(CWD)/node_modules
-	[ -f $(CWD)/package-lock.json ] && rm $(CWD)/package-lock.json 2>/dev/null; true
-	
+	sudo rm -rf $(CWD)/.config
+	@if [ -f $(CWD)/package-lock.json ]; then\
+    	rm $(CWD)/package-lock.json;\
+    fi

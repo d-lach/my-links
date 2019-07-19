@@ -1,5 +1,9 @@
 const bcrypt = require('bcrypt');
 
-export default function hash (string) {
+export function hash (string) {
     return bcrypt.hash(string, 10)
+}
+
+export function check(explicit, hash) {
+    return bcrypt.compareSync(explicit, hash)
 }

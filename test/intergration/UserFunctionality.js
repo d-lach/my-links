@@ -5,15 +5,13 @@ describe("Private links management", () => {
         await bootstrap.usersRepository.removeAll();
     });
 
+    let tester = null;
     it("should register new user", (done) => {
-        let tester = testUsers.next().value;
+        tester = testUsers.next().value;
         chai.request(app)
             .post('/api/anonymous')
             .set('content-type', 'application/x-www-form-urlencoded')
-            .send({
-                email: tester.email,
-                password: tester.password
-            })
+            .send(tester)
             .end((err, res) => {
                 res.should.have.status(201);
                 res.body.should.have.property('permissions').and.to.be.equal(1);
@@ -22,11 +20,14 @@ describe("Private links management", () => {
             });
     });
 
-    it("should authorize user", (done) => {
+    it("should authorize user and assign valid access token", (done) => {
         chai.request(app)
-            .post('/user/login')
+            .post('/api/anonymous/login')
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send(tester)
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.have.property('token').and.not.to.be.empty;
                 done();
             });
     });

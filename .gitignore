@@ -1,7 +1,8 @@
-*.swp
 /docker/data/
 
 node_modules/
+.config/
 .idea/
 
+*.swp
 **.env

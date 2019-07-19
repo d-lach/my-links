@@ -1,10 +1,9 @@
 /**
- * @param { {linksController, usersController} } app
+ * @param { {linksController, usersController, authorization} } app
  */
 export default function (app) {
     let express = require('express');
     let router = express.Router();
-
 
     let linksRoutes = express.Router({mergeParams: true});
 

@@ -2,20 +2,23 @@ import Controller from "../framework/Controller";
 
 class UsersController extends Controller {
 
-    /**
-     * @param { {usersRepository} }  users
-     */
-    constructor({usersRepository}) {
+    constructor({usersRepository, authService}) {
         super();
         this.users = usersRepository;
+        this.auth = authService;
     }
 
     index(req) {
         this.send(req.user);
     }
 
-    logIn(req) {
-        this.send("not implemented");
+    logIn(req, res) {
+        this.auth.signIn(req.body)
+            .then((token) => {
+                res.cookie('token', token, {secure: false, httpOnly: false, maxAge: 1209600000});
+                this.send({token});
+            })
+            .catch(this.handleError);
     }
 
     async signUp(req) {
