@@ -1,12 +1,16 @@
 .PHONY: install test shell clean
 
-include ./docker/.env
+CWD := $(abspath $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
+NODEMODULES_VOLUME_UP=$(shell docker volume ls | grep nodemodules | wc -l)
+
+include $(CWD)/docker/.env
 export
 
 install:
-	[ ! -f ./server/.env ] && cp ./server/.env.example ./server/.env 2>/dev/null; true
-	[ ! -f ./server/.test.env ] && cp ./server/.env.example ./server/.test.env 2>/dev/null; true
-	docker volume create nodemodules
+	 mkdir -p $(CWD)/node_modules
+	[ ! -f $(CWD)/server/.env ] && cp $(CWD)/server/.env.example $(CWD)/server/.env 2>/dev/null; true
+	[ ! -f $(CWD)/server/.test.env ] && cp $(CWD)/server/.env.example $(CWD)/server/.test.env 2>/dev/null; true
+	docker volume create -d local -o type=none -o o=bind -o device=$(CWD)/node_modules nodemodules
 	docker-compose -f docker-compose.builder.yml run --rm install
 
 dev:
@@ -19,8 +23,11 @@ test:
 	docker-compose exec server npm run test
 
 clean:
-	docker-compose down
-	docker volume rm nodemodules
-	sudo rm -rf ./docker/data
-	rm ./package-lock.json
+	docker-compose down --remove-orphans
+	@if [ $(NODEMODULES_VOLUME_UP) -gt 0 ]; then\
+		docker volume rm nodemodules;\
+	fi
+	sudo rm -rf $(CWD)/docker/data
+	sudo rm -rf $(CWD)/node_modules
+	[ -f $(CWD)/package-lock.json ] && rm $(CWD)/package-lock.json 2>/dev/null; true
 	
