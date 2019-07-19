@@ -13,6 +13,7 @@ global.expect = chai.expect;
 
 // start test server instance
 global.app = require('../server/server').app;
+global.bootstrap = require('../server/bootstrap').default;
 before(done => app.on( "ready", done));
 
 

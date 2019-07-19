@@ -1,13 +1,11 @@
-import LinksRepository from "../../server/repositories/LinksRepository"
 import { testLinks } from "../TestData"
 
 describe("General", () => {
     let testData = [...Array(5).keys()].map(() => testLinks.next().value);
 
     before(async () => {
-        let links = new LinksRepository();
-        await links.removeAll();
-        await links.addMany(testData);
+        await bootstrap.linksRepository.removeAll();
+        await bootstrap.linksRepository.addMany(testData);
     });
 
     it("server should be up and running", (done) => {

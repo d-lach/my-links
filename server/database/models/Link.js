@@ -6,4 +6,4 @@ const LinkScheme = new Schema({
     link: {type: String, index: true,  unique: true, required: true, dropDups: true }
 });
 
-export default mongoose.model("Link", LinkScheme);
+export default () => mongoose.model("Link", LinkScheme);

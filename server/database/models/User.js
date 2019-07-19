@@ -9,4 +9,4 @@ const schema = new Schema({
     permissions: {type: Number, default: 1},
 });
 
-export default mongoose.model('User', schema);
+export default () => mongoose.model('User', schema);

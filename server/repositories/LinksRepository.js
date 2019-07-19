@@ -1,18 +1,18 @@
-import LinkModel from '../database/models/Link';
-
-const hashids = new (require('hashids'))();
+import boundMethod from 'autobind-decorator';
 
 export default class LinksRepository {
-    constructor() {
 
+    constructor({linkModel, idGenerator}) {
+        this.links = linkModel;
+        this.generateId = idGenerator;
     }
 
     getAll(page = 1) {
-        return LinkModel.find();
+        return this.links.find();
     }
 
     removeAll() {
-        return LinkModel.deleteMany({});
+        return this.links.deleteMany({});
     }
 
     add(linkData) {
@@ -20,15 +20,15 @@ export default class LinksRepository {
     }
 
     addMany(linksData) {
-        return LinkModel.insertMany(linksData.map(this._wrapLinkData))
+        return this.links.insertMany(linksData.map(this._wrapLinkData))
     }
 
     get(id) {
-        return LinkModel.findById(id);
+        return this.links.findById(id);
     }
 
     async modify(link, newTarget) {
-        link = await LinkModel.findOne({link});
+        link = await this.links.findOne({link});
 
         if (!link)
             return null;
@@ -40,28 +40,25 @@ export default class LinksRepository {
     }
 
     find(link) {
-        return LinkModel.findOne({link});
+        return this.links.findOne({link});
     }
 
     findTarget(link) {
-        return LinkModel.findOne({link}).select({target: 1, _id: 0});
+        return this.links.findOne({link}).select({target: 1, _id: 0});
     }
 
     remove(link) {
-        return LinkModel.deleteOne({link})
+        return this.links.deleteOne({link})
             .then(results => {
                 return results.deletedCount > 0;
             });
     }
 
+    @boundMethod
     _wrapLinkData(linkData) {
         if (!linkData.link)
-            linkData.link = this._generateUniqueId();
+            linkData.link = this.generateId();
 
-        return new LinkModel(linkData);
-    }
-
-    _generateUniqueId() {
-        return hashids.encode(Date.now());
+        return new this.links(linkData);
     }
 }

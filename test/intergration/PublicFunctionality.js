@@ -1,12 +1,10 @@
-import LinksRepository from "../../server/repositories/LinksRepository";
 import { testLinks } from "../TestData";
 
 describe("Public links customization", () => {
     let recentLink = null;
 
     before(async () => {
-        let links = new LinksRepository();
-        await links.removeAll();
+        await bootstrap.linksRepository.removeAll();
     });
 
     it("should fetch empty links list", (done) => {

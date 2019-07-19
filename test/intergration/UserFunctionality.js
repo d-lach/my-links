@@ -1,10 +1,8 @@
-import UsersRepository from "../../server/repositories/UsersRepository";
 import {testUsers} from "../TestData";
 
 describe("Private links management", () => {
     before(async () => {
-        let users = new UsersRepository();
-        await users.removeAll();
+        await bootstrap.usersRepository.removeAll();
     });
 
     it("should register new user", (done) => {

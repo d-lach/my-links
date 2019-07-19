@@ -1,6 +1,6 @@
 const DependencyInjector = require('awilix');
 
-let bootstrap = DependencyInjector.createContainer();
+export let bootstrap = DependencyInjector.createContainer();
 
 bootstrap.loadModules([
     'controllers/**/*.js',
@@ -18,6 +18,20 @@ bootstrap.loadModules([
     cwd : 'server',
     formatName: 'camelCase',
     register: DependencyInjector.asClass,
+});
+
+bootstrap.loadModules([
+    'database/models/**/*.js',
+], {
+    cwd : 'server',
+    formatName: (modelFileName) => modelFileName.charAt(0).toLowerCase() + modelFileName.slice(1)  + "Model",
+    register: DependencyInjector.asFunction,
+    lifetime: DependencyInjector.Lifetime.SINGLETON
+});
+
+bootstrap.register({
+    passwordHasher: DependencyInjector.asValue( require('./libs/Hasher').default),
+    idGenerator: DependencyInjector.asValue( require('./libs/DatetimeHasher').default),
 });
 
 export default bootstrap.cradle;

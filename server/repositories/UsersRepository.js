@@ -1,19 +1,23 @@
-import UserModel from '../database/models/User';
 import Errors from "../Errors";
-
-const bcrypt = require('bcrypt');
+import {boundMethod} from "autobind-decorator";
 
 export default class UsersRepository {
 
-    constructor() {
+    /**
+     * @param { UserModel } userModel
+     * @param { function } passwordHasher
+     */
+    constructor({userModel, passwordHasher}) {
+        this.hashPassword = passwordHasher;
+        this.users = userModel;
     }
 
     getAll() {
-        return UserModel.find();
+        return this.users.find();
     }
 
     removeAll() {
-        return UserModel.deleteMany({});
+        return this.users.deleteMany({});
     }
 
     create(userData) {
@@ -32,20 +36,21 @@ export default class UsersRepository {
     }
 
     get(id) {
-        return UserModel.findById(id);
+        return this.users.findById(id);
     }
 
     find(email) {
-        return UserModel.findOne({email});
+        return this.users.findOne({email});
     }
 
+    @boundMethod
     async _prepareNewUser(userData) {
         try {
-            userData.hash = await bcrypt.hash(userData.password, 10);
+            userData.hash = await this.hashPassword(userData.password);
         } catch (err) {
             // todo original error should be logged
             Errors.invalidRequest.message("Cannot hash given password").throw();
         }
-        return new UserModel(userData);
+        return new this.users(userData);
     }
 }
