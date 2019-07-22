@@ -1,11 +1,13 @@
-import {testUsers} from "../TestData";
+import {testLinks, testUsers} from "../TestData";
 
-describe("Private links management", () => {
+let tester = null;
+
+describe ("User authorization", () => {
     before(async () => {
         await bootstrap.usersRepository.removeAll();
+        await bootstrap.linksRepository.removeAll();
     });
 
-    let tester = null;
     it("should register new user", (done) => {
         tester = testUsers.next().value;
         chai.request(app)
@@ -36,7 +38,7 @@ describe("Private links management", () => {
     it("should get user info", (done) => {
         chai.request(app)
             .get('/api/user/me')
-            .set('Cookie', 'token=' + tester.token)
+            .set('Authorization', 'Bearer ' + tester.token)
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.have.property('email').and.to.be.equal(tester.email);
@@ -44,49 +46,100 @@ describe("Private links management", () => {
                 done();
             });
     });
+});
+
+describe("Private links management", () => {
+    before(async () => {
+        if (!tester)
+            throw new Error('cannot test user actions without valid user');
+    });
 
     it("should fetch 0 private links", (done) => {
         chai.request(app)
-            .get('/user/link/all')
+            .get('/api/user/link')
+            .set('Authorization', 'Bearer ' + tester.token)
             .end((err, res) => {
                 res.should.have.status(200);
+                res.body.should.have.property('links').and.to.be.empty;
                 done();
             });
     });
 
-    it("should fetch 10 private links", (done) => {
-        chai.request(app)
-            .get('/user/link/all')
-            .end((err, res) => {
-                res.should.have.status(200);
-                done();
-            });
-    });
-
+    let testLink = testLinks.next().value;
     it("should add private link", (done) => {
         chai.request(app)
-            .post('/user/link')
+            .post('/api/user/link')
+            .set('Authorization', 'Bearer ' + tester.token)
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .send(testLink)
             .end((err, res) => {
-                res.should.have.status(200);
+                res.should.have.status(201);
+                res.body.should.have.property('target').and.to.be.equal(testLink.target);
+                res.body.should.have.property('link').and.to.be.equal(testLink.link);
                 done();
             });
     });
 
     it("should get single private link", (done) => {
         chai.request(app)
-            .get('/user/link')
+            .get('/api/user/link/' + testLink.link)
+            .set('Authorization', 'Bearer ' + tester.token)
+            .set('content-type', 'application/x-www-form-urlencoded')
             .end((err, res) => {
                 res.should.have.status(200);
                 done();
             });
     });
 
+    it("should fetch 5 private links", async () => {
+        let testerModel = await bootstrap.usersRepository.find(tester.email);
+        for (let i = 0; i < 4; i++)
+            await bootstrap.privateLinksRepository.add(testerModel, testLinks.next().value);
+
+        return chai.request(app)
+            .get('/api/user/link')
+            .set('Authorization', 'Bearer ' + tester.token)
+            .then((res) => {
+                res.should.have.status(200);
+                res.body.should.have.property('links').and.to.have.length(5);
+            });
+    });
+
+    it("should modify private link", (done) => {
+        let updatedTestLink = testLinks.next().value;
+
+        chai.request(app)
+            .put('/api/user/link/' + testLink.link)
+            .set('content-type', 'application/x-www-form-urlencoded')
+            .set('Authorization', 'Bearer ' + tester.token)
+            .send({ target: testLink.target })
+            .end((err, res) => {
+                res.should.have.status(201);
+                res.body.should.have.property('link').and.to.be.equal(testLink.link);
+                res.body.should.have.property('target').and.to.be.equal(updatedTestLink.target);
+                testLink = res.body;
+                done();
+            });
+    });
+
     it("should remove private link", (done) => {
         chai.request(app)
-            .delete('/user/link')
+            .delete('/api/user/link/' + testLink.link)
+            .set('Authorization', 'Bearer ' + tester.token)
+            .end((err, res) => {
+                res.should.have.status(204);
+                done();
+            });
+    });
+
+    it("should fetch 4 private links", (done) => {
+        chai.request(app)
+            .get('/api/user/link')
+            .set('Authorization', 'Bearer ' + tester.token)
             .end((err, res) => {
                 res.should.have.status(200);
-                done();
+                res.body.should.have.property('links').and.to.have.length(4);
+                done()
             });
     });
 });

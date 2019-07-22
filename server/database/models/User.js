@@ -7,6 +7,8 @@ const schema = new Schema({
     createdDate: {type: Date, default: Date.now},
 
     permissions: {type: Number, default: 1},
+
+    links: [{type: Schema.Types.ObjectId, ref: 'Link'}],
 });
 
 export default () => mongoose.model('User', schema);

@@ -1,5 +1,5 @@
 /**
- * @param { {linksController, usersController, authorization} } app
+ * @param { {linksController, usersController, privateLinksController, authorization} } app
  */
 export default function (app) {
     let express = require('express');
@@ -21,6 +21,11 @@ export default function (app) {
     let publicUserRoutes = express.Router({mergeParams: true});
 
     usersRoutes.get('/me', app.usersController.index);
+    usersRoutes.get('/link', app.privateLinksController.index);
+    usersRoutes.get('/link/:link', app.privateLinksController.show);
+    usersRoutes.post('/link', app.privateLinksController.create);
+    usersRoutes.put('/link/:link', app.privateLinksController.update);
+    usersRoutes.delete('/link/:link', app.privateLinksController.destroy);
 
     publicUserRoutes.post('/', app.usersController.signUp);
     publicUserRoutes.post('/login', app.usersController.logIn);
