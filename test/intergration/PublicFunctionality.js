@@ -109,7 +109,7 @@ describe("Public links customization", () => {
 
     it("should handle update of invalid link", (done) => {
         chai.request(app)
-            .delete('/api/link/invalid-link-name')
+            .put('/api/link/invalid-link-name')
             .end((err, res) => {
                 res.should.have.status(404);
                 done();

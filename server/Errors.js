@@ -27,6 +27,10 @@ export default class Errors {
         return Errors._createError(ErrorType.EmailInUse, "Email already in use");
     }
 
+    static get notImplemented() {
+        return Errors._createError(ErrorType.NotImplemented, "Not implemented");
+    }
+
     static _createError(type, msg) {
         let error = new Errors();
         error.msg = msg;
@@ -66,6 +70,7 @@ export const ErrorType = {
     EmailInUse: "Email in use",
     InvalidModel: "ValidationError", // mongoose validation error
     TokenExpired: "TokenExpiredError", // jwt authentication error
-    InvalidToken: "InvalidToken" // jwt authentication error
+    InvalidToken: "InvalidToken", // jwt authentication error
+    NotImplemented: "NotImplemented" // jwt authentication error
 };
 

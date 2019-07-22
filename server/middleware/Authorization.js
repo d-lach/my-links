@@ -29,6 +29,12 @@ class Authorization extends Middleware {
     };
 
     get token() {
+        if (this.req.headers.authorization)
+            return this.req.headers.authorization.split(' ')[1]; // Bearer token
+
+        if (this.req.query['x-token'])
+            return this.req.query['x-token'];
+
         return this.req.cookies.token;
     }
 

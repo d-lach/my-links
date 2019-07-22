@@ -1,22 +1,34 @@
 const links = ['bitcoin', 'ethereum', 'monero', 'litecoin', 'ripple'];
-const users = ['testx1@test', 'testx2@test', 'testx3@test', 'testx4@test', 'testx5@test'];
-
-function getTarget(link) {
-    return 'https://www.google.com/search?q=' + link;
-}
 
 export const testLinks = (function* () {
-    for (let i = 0; true; i = (++i) % links.length)
+
+    for (let i = 0; true; ++i)
         yield {
-            link: links[i],
-            target: getTarget(links[i])
+            link: getLink(i),
+            target: getTarget(i)
         };
 })();
 
 export const testUsers = (function* () {
-    for (let i = 0; true; i = (++i) % users.length)
+    for (let i = 1; true; i++)
         yield {
-            email: users[i],
+            email: getEmail(i),
             password: 'test'
         };
 })();
+
+function getTarget(index) {
+    return 'https://www.google.com/search?q=' + links[index % links.length];
+}
+
+function getLink(index) {
+    let link = links[index % links.length];
+    if (index > links.length)
+        link = link + '-' + Math.floor(index/links.length).toString();
+
+    return link;
+}
+
+function getEmail(index) {
+    return 'tester-' + index.toString() + '@test';
+}

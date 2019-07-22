@@ -4,7 +4,7 @@ import {boundMethod} from "autobind-decorator";
 export default class UsersRepository {
 
     /**
-     * @param { UserModel } userModel
+     * @param { User } userModel
      * @param { function } passwordHasher
      */
     constructor({userModel, passwordHasher}) {
@@ -13,7 +13,7 @@ export default class UsersRepository {
     }
 
     getAll() {
-        return this.users.find();
+        return this.users.find({});
     }
 
     removeAll() {
@@ -32,10 +32,10 @@ export default class UsersRepository {
 
     addMany(usersData) {
         return Promise.all(usersData.map(this._prepareNewUser))
-            .then(UserModel.insertMany);
+            .then(this.users.insertMany);
     }
 
-    get(id) {
+     get(id) {
         return this.users.findById(id);
     }
 
