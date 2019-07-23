@@ -112,7 +112,7 @@ describe("Private links management", () => {
             .put('/api/user/link/' + testLink.link)
             .set('content-type', 'application/x-www-form-urlencoded')
             .set('Authorization', 'Bearer ' + tester.token)
-            .send({ target: testLink.target })
+            .send({ target: updatedTestLink.target })
             .end((err, res) => {
                 res.should.have.status(201);
                 res.body.should.have.property('link').and.to.be.equal(testLink.link);

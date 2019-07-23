@@ -27,7 +27,9 @@ class PrivateLinksController extends Controller {
     }
 
     update(req) {
-        Errors.notImplemented.throw();
+        this.privateLinks.modify(req.user, req.params.link, req.body.target)
+            .then(this.updated)
+            .catch(this.handleError);
     }
 
     destroy(req) {

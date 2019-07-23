@@ -7,7 +7,7 @@ export default class PrivateLinksRepository {
      */
     constructor({usersRepository, linksRepository, userModel}) {
         this.usersRepository = usersRepository;
-        this.linksRepository = linksRepository;
+        this.links = linksRepository;
         this.users = userModel;
     }
 
@@ -27,13 +27,28 @@ export default class PrivateLinksRepository {
 
     async add(userOrId, linkData) {
         let user = await this._getUser(userOrId);
-
-        let newLink = await this.linksRepository.add(linkData);
-
+        linkData.owner = user._id;
+        let newLink = await this.links.add(linkData);
         user.links.push(newLink._id);
         await user.save();
 
         return newLink;
+    }
+
+    async modify(userOrId, link, newTarget) {
+        let user = await this._getUser(userOrId);
+        link = await this.links.find(link);
+
+        if (!link)
+            Errors.notFound.throw();
+
+        if (!link.isPrivate() || !link.owner.equals(user._id))
+            Errors.unauthorized.message("It's not your link").throw();
+
+        link.target = newTarget;
+        await link.save();
+
+        return link;
     }
 
     _getUserId(userOrId) {
