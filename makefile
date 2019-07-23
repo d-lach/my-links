@@ -1,4 +1,4 @@
-.PHONY: install test shell clean
+.PHONY: install test shell clean dev
 
 CWD := $(abspath $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST))))))
 NODEMODULES_VOLUME_UP=$(shell docker volume ls | grep nodemodules | wc -l)
@@ -17,16 +17,26 @@ install:
 	docker-compose -f docker-compose.builder.yml run --rm install
 
 dev:
-	docker-compose up
-
-shell:
-	docker-compose exec server bash 2>/dev/null; true
+	docker-compose up -d
+	${MAKE} inspect
 
 test:
 	docker-compose exec server npm run test
 
-clean:
+shell:
+	docker-compose exec server bash 2>/dev/null; true
+
+inspect:
+	docker-compose logs -f --tail=250 server 2>/dev/null; true
+
+logs:
+	docker-compose logs -f --tail=500
+
+close:
 	docker-compose down --remove-orphans
+
+clean:
+	${MAKE} close
 	@if [ $(NODEMODULES_VOLUME_UP) -gt 0 ]; then\
 		docker volume rm nodemodules;\
 	fi
