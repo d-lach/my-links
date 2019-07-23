@@ -33,7 +33,9 @@ class PrivateLinksController extends Controller {
     }
 
     destroy(req) {
-        Errors.notImplemented.throw();
+        this.privateLinks.remove(req.user, req.params.link)
+            .then(this.deleted)
+            .catch(this.handleError);
     }
 }
 

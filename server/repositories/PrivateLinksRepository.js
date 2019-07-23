@@ -51,6 +51,19 @@ export default class PrivateLinksRepository {
         return link;
     }
 
+    async remove(userOrId, link) {
+        let user = await this._getUser(userOrId);
+        link = await this.links.find(link);
+
+        if (!link)
+            Errors.notFound.throw();
+
+        if (!link.isPrivate() || !link.owner.equals(user._id))
+            Errors.unauthorized.message("It's not your link").throw();
+
+        return this.links.remove(link.link);
+    }
+
     _getUserId(userOrId) {
         if (typeof userOrId === 'string')
            return userOrId;
