@@ -33,6 +33,7 @@ bootstrap.register({
     passwordHasher: DependencyInjector.asValue(require('./libs/Hasher').hash),
     passwordChecker: DependencyInjector.asValue(require('./libs/Hasher').check),
     idGenerator: DependencyInjector.asValue(require('./libs/DatetimeHasher').default),
+    permissions: DependencyInjector.asValue(require('./permissions').default),
 });
 
 export default bootstrap.cradle;
