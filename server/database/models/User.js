@@ -6,7 +6,12 @@ const schema = new Schema({
     hash: {type: String, required: true},
     createdDate: {type: Date, default: Date.now},
 
-    permissions: {type: Number, default: 1},
+    role: {
+        type: String,
+        required: true,
+        enum: ['user', 'admin'],
+        default: 'user'
+    },
 
     links: [{type: Schema.Types.ObjectId, ref: 'Link'}],
 });

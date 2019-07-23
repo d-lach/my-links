@@ -16,7 +16,7 @@ describe ("User authorization", () => {
             .send(tester)
             .end((err, res) => {
                 res.should.have.status(201);
-                res.body.should.have.property('permissions').and.to.be.equal(1);
+                res.body.should.have.property('role').and.to.be.equal('user');
                 res.body.should.have.property('email').and.to.be.equal(tester.email);
                 done();
             });
@@ -42,7 +42,7 @@ describe ("User authorization", () => {
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.have.property('email').and.to.be.equal(tester.email);
-                res.body.should.have.property('permissions').and.to.be.equal(1);
+                res.body.should.have.property('role').and.to.be.equal('user');
                 done();
             });
     });

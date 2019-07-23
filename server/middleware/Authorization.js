@@ -19,15 +19,6 @@ class Authorization extends Middleware {
             .catch(next);
     }
 
-    privilegesGuard(requiredLevel) {
-        return function (req, res, next) {
-            if (req.user.permissions < requiredLevel)
-                Errors.unauthorized.throw();
-
-            next();
-        };
-    };
-
     get token() {
         if (this.req.headers.authorization)
             return this.req.headers.authorization.split(' ')[1]; // Bearer token
