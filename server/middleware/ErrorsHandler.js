@@ -8,10 +8,14 @@ class ErrorsHandler {
     handle(err, req, res, next) {
         // custom application error
         if (typeof (err) === 'string') {
-            return res.status(500).json({message: err});
+            return res.status(500).json({
+                error: 'Unknown',
+                message: err
+            });
         }
 
         let errorResponse = {
+            error: err.name,
             message: err.message
         };
 
