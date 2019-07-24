@@ -76,6 +76,7 @@ describe("Public links customization", () => {
             .get('/api/link/invalid-link-name')
             .end((err, res) => {
                 res.should.have.status(404);
+                res.body.should.have.property('error').and.to.be.equal('Not found');
                 done();
             });
     });
@@ -91,7 +92,7 @@ describe("Public links customization", () => {
             });
     });
 
-    it("should modify link", (done) => {
+    it("should not be able to modify public link without login", (done) => {
         let testLink = testLinks.next().value;
 
         chai.request(app)
@@ -99,10 +100,8 @@ describe("Public links customization", () => {
             .set('content-type', 'application/x-www-form-urlencoded')
             .send({ target: testLink.target })
             .end((err, res) => {
-                res.should.have.status(201);
-                res.body.should.have.property('link').and.to.be.equal(recentLink.link);
-                res.body.should.have.property('target').and.to.be.equal(testLink.target);
-                recentLink = res.body;
+                res.should.have.status(401);
+                res.body.should.have.property('error').and.to.be.equal('Unauthorized');
                 done();
             });
     });
@@ -112,35 +111,38 @@ describe("Public links customization", () => {
             .put('/api/link/invalid-link-name')
             .end((err, res) => {
                 res.should.have.status(404);
+                res.body.should.have.property('error').and.to.be.equal('Not found');
                 done();
             });
     });
 
-    it("should remove one link by id", (done) => {
+    it("should not be able to remove public link without login", (done) => {
         chai.request(app)
             .delete('/api/link/' + recentLink.link)
             .end((err, res) => {
-                res.should.have.status(204);
+                res.should.have.status(401);
+                res.body.should.have.property('error').and.to.be.equal('Unauthorized');
                 done();
             });
     });
-
+    
     it("should handle removal of non existent link", (done) => {
         chai.request(app)
             .delete('/api/link/invalid-link-name')
             .end((err, res) => {
                 res.should.have.status(404);
+                res.body.should.have.property('error').and.to.be.equal('Not found');
                 done();
             });
     });
 
-    it("should fetch 1 link", (done) => {
+    it("should fetch 2 links", (done) => {
         chai.request(app)
             .get('/api/link')
             .end((err, res) => {
                 res.should.have.status(200);
                 should.exist(res.body);
-                res.body.should.have.length(1);
+                res.body.should.have.length(2);
                 done();
             });
     });
